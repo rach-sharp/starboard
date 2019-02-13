@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load socialaccount static %}
+
+{% block css %}
+  {{ block.super }}
+  <link rel="stylesheet" href="{% static 'css/starboard.css' %}"/>
+{% endblock %}
+
+{% block content %}
+
+  {% if user.is_authenticated %}
+    <div class="repo-grid py-5">
+      {% for repo in starred %}
+        <div class="card repo-grid-item">
+          <div class="card-body">
+            <h5 class="card-title">{{ repo.name }}</h5>
+            <h6 class="text-muted">{{ repo.description }}</h6>
+
+            {% for topic in repo.topics %}
+              <p>{{ topic }}</p>
+              <p>{{ created_at }}</p>
+            {% endfor %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <a id="github-button" class="btn btn-block btn-social btn-github" href="{% provider_login_url "github" %}">
+        <i class="fa fa-github"></i> Sign in with GitHub
+    </a>
+  {% endif %}
+{% endblock %}
+
+{% block javascript %}
+  {{ block.super }}
+  <script src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
+  <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+  <script>
+    let $grid_albums = $('.repo-grid').masonry({
+      // options
+      itemSelector: '.repo-grid-item',
+      columnWidth: '.repo-grid-item',
+      fitWidth:true,
+      gutter:20,
+    });
+    $grid_albums.imagesLoaded().progress( function() {
+      $grid_albums.masonry('layout');
+    });
+  </script>
+{% endblock %}
