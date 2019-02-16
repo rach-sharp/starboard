@@ -1,22 +1,21 @@
 from django.conf import settings
-from django.urls import include, path
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.views.generic import TemplateView
+from django.urls import include, path
 from django.views import defaults as default_views
+from django.views.generic import TemplateView, RedirectView
 
-from starboard.stars.views import starboard_view
+from starboard.stars.views import user_starboard_view, top_starboard_view
 
 urlpatterns = [
-    path("", starboard_view, name="home"),
-    # Django Admin, use {% url 'admin:index' %}
+    path("", RedirectView.as_view(url='top/', permanent=True), name="home"),
+    path("top/", top_starboard_view, name="top"),
+    path("me/", user_starboard_view, name="me"),
+    path("signup/", TemplateView.as_view(template_name="pages/signup.html"), name="signup"),
     path(settings.ADMIN_URL, admin.site.urls),
-    # User management
-    path(
-        "users/",
-        include("starboard.users.urls", namespace="users"),
-    ),
-    path("accounts/", include("allauth.urls")),
+    path("about/", TemplateView.as_view(template_name="pages/about.html"), name="about"),
+
+    path("accounts/", include("starboard.contrib.allauth.urls")),
 ] + static(
     settings.MEDIA_URL, document_root=settings.MEDIA_ROOT
 )

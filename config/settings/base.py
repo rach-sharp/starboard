@@ -69,10 +69,11 @@ THIRD_PARTY_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.github',
     'rest_framework',
+    'el_pagination'
 ]
 LOCAL_APPS = [
     'starboard.users.apps.UsersAppConfig',
-    # Your stuff: custom apps go here
+    'starboard.stars.apps.StarsAppConfig',
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -94,9 +95,9 @@ AUTHENTICATION_BACKENDS = [
 # https://docs.djangoproject.com/en/dev/ref/settings/#auth-user-model
 AUTH_USER_MODEL = 'users.User'
 # https://docs.djangoproject.com/en/dev/ref/settings/#login-redirect-url
-LOGIN_REDIRECT_URL = 'users:redirect'
+LOGIN_REDIRECT_URL = 'home'
 # https://docs.djangoproject.com/en/dev/ref/settings/#login-url
-LOGIN_URL = 'account_login'
+LOGIN_URL = 'signup'
 
 # PASSWORDS
 # ------------------------------------------------------------------------------
@@ -232,16 +233,20 @@ ADMINS = [
 # https://docs.djangoproject.com/en/dev/ref/settings/#managers
 MANAGERS = ADMINS
 
+CAMO_URL = env("CAMO_URL")
+CAMO_KEY = env("CAMO_KEY").encode("utf-8")
 
 # django-allauth
 # ------------------------------------------------------------------------------
-ACCOUNT_ALLOW_REGISTRATION = env.bool('DJANGO_ACCOUNT_ALLOW_REGISTRATION', True)
+ACCOUNT_ALLOW_FORM_REGISTRATION = env.bool('DJANGO_ACCOUNT_ALLOW_FORM_REGISTRATION', False)
+ACCOUNT_ALLOW_SOCIAL_REGISTRATION = env.bool('DJANGO_ACCOUNT_ALLOW_SOCIAL_REGISTRATION', True)
+
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
 ACCOUNT_AUTHENTICATION_METHOD = 'username'
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
-ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_EMAIL_REQUIRED = False
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
-ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+ACCOUNT_EMAIL_VERIFICATION = 'none'
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
 ACCOUNT_ADAPTER = 'starboard.users.adapters.AccountAdapter'
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
@@ -254,5 +259,40 @@ SOCIALACCOUNT_PROVIDERS = {
         ],
     }
 }
+
+# Celery
+# ------------------------------------------------------------------------------
+INSTALLED_APPS += ['starboard.taskapp.celery.CeleryAppConfig']
+if USE_TZ:
+    # http://docs.celeryproject.org/en/latest/userguide/configuration.html#std:setting-timezone
+    CELERY_TIMEZONE = TIME_ZONE
+# http://docs.celeryproject.org/en/latest/userguide/configuration.html#std:setting-broker_url
+CELERY_BROKER_URL = env('CELERY_BROKER_URL')
+# http://docs.celeryproject.org/en/latest/userguide/configuration.html#std:setting-result_backend
+CELERY_RESULT_BACKEND = CELERY_BROKER_URL
+# http://docs.celeryproject.org/en/latest/userguide/configuration.html#std:setting-accept_content
+CELERY_ACCEPT_CONTENT = ['json']
+# http://docs.celeryproject.org/en/latest/userguide/configuration.html#std:setting-task_serializer
+CELERY_TASK_SERIALIZER = 'json'
+# http://docs.celeryproject.org/en/latest/userguide/configuration.html#std:setting-result_serializer
+CELERY_RESULT_SERIALIZER = 'json'
+# http://docs.celeryproject.org/en/latest/userguide/configuration.html#task-time-limit
+# TODO: set to whatever value is adequate in your circumstances
+CELERYD_TASK_TIME_LIMIT = 5 * 60
+# http://docs.celeryproject.org/en/latest/userguide/configuration.html#task-soft-time-limit
+# TODO: set to whatever value is adequate in your circumstances
+CELERYD_TASK_SOFT_TIME_LIMIT = 60
+
 # Your stuff...
 # ------------------------------------------------------------------------------
+
+IMG_SRC_IGNORE_STRINGS = [
+    "img.shields.io", "circleci.com", "badge",
+    "travis-ci.com", "travis-ci.org", "status",
+    "buttons", "creativecommons.org", "assets.buddy.works",
+    "beerpay.io", "david.dm", "david-dm.org", "cirrus-ci", "codecov.io", "tokei.rs",
+    "ci.svg", "herokucdn.com/deploy", "buymeacoffee.com", "saucelabs.com",
+    "hakiri.io", "app.fossa.io", "patreon.com", "localized.svg", "inch-ci.org",
+    "avatar.svg", "ga-beacon.appspot.com", "floobits.com", "gitpod.io", "api.bintray.com",
+    "jitpack.io", "browser-logos"
+]

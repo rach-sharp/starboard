@@ -1,0 +1,33 @@
+{% load el_pagination_tags image_proxy %}
+
+{% if request.is_ajax %}{% paginate 30 object_list %}{% endif %}
+{% for repo in object_list %}
+  <div class="card repo-grid-item">
+    {% if repo.image_url %}
+      <div class="img-container">
+        <a href="{{ repo.url }}">
+          <img hidden class="card-img-top" src="{{ repo.image_url|proxy }}" align="middle" onload="this.removeAttribute('hidden')" onerror="this.src=''"/>
+        </a>
+      </div>
+    {% endif %}
+    <div class="card-body">
+      <h5 class="card-title"><a class="repo-link" href="{{ repo.url }}">{{ repo.name }}</a></h5>
+      {% if repo.description %}
+        <h6 class="text-muted">{{ repo.description }}</h6>
+      {% endif %}
+
+      {% for topic in repo.topics %}
+        <p>{{ topic }}</p>
+        <p>{{ created_at }}</p>
+      {% endfor %}
+    </div>
+    <div class="card-footer">
+      <div class="row">
+        <p class="col-4 text-center"> <span class="badge badge-pill"><i class="fa fa-star"></i> {{ repo.stargazers_count }}</span></p>
+        <p class="col-4 text-center"> <span class="badge badge-pill"><i class="fa fa-code-branch"></i> {{ repo.forks }}</span></p>
+        <p class="col-4 text-center"> <span class="badge badge-pill"><i class="fa fa-exclamation-circle"></i> {{ repo.open_issues }}</span></p>
+      </div>
+    </div>
+  </div>
+{% endfor %}
+

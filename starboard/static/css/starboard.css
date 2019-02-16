@@ -1,6 +1,64 @@
+.card-img-top{
+  max-width: 300px;
+  width: auto;
+  height: auto;
+  padding: 0.5rem;
+}
 
+.repo-grid {
+  margin: 0 auto;
+}
+
+.img-container {
+  text-align: center;
+}
+
+.card {
+  display: unset;
+}
 
 .repo-grid-item {
   width: 300px;
   margin-bottom: 20px;
+}
+
+.card-footer {
+  height: 28px;
+  padding-top: 0;
+  border-top: none;
+}
+
+
+@media only screen and (max-width: 650px) {
+
+  .card-img-top {
+    max-width: 100%;
+  }
+
+  .repo-grid-item {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+}
+
+
+.endless_more {
+  color: #000080;
+}
+
+.repo-link {
+  color: #000080;
+}
+
+.login-div {
+  display: flex;
+  margin-top: 35vh;
+  height: 30vh;
+  max-width: 500px;
+  align-items: center;
+  flex-direction: column;
+  border-radius: 10px;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: #f3f3f3;
 }

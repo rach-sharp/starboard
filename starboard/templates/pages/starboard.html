@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load socialaccount static %}
+{% load socialaccount static image_proxy el_pagination_tags %}
 
 {% block css %}
   {{ block.super }}
@@ -7,44 +7,52 @@
 {% endblock %}
 
 {% block content %}
-
-  {% if user.is_authenticated %}
-    <div class="repo-grid py-5">
-      {% for repo in starred %}
-        <div class="card repo-grid-item">
-          <div class="card-body">
-            <h5 class="card-title">{{ repo.name }}</h5>
-            <h6 class="text-muted">{{ repo.description }}</h6>
-
-            {% for topic in repo.topics %}
-              <p>{{ topic }}</p>
-              <p>{{ created_at }}</p>
-            {% endfor %}
-          </div>
-        </div>
-      {% endfor %}
+    {% lazy_paginate 30 object_list %}
+    <div id="repo_grid" class="repo-grid py-5">
+      {% include "pages/starboard_page.html" %}
+    <div id="moreCard" class="card repo-grid-item">
+      <div class="card-body">
+        <h5>{% show_more "Load More" %}</h5>
+      </div>
     </div>
-  {% else %}
-    <a id="github-button" class="btn btn-block btn-social btn-github" href="{% provider_login_url "github" %}">
-        <i class="fa fa-github"></i> Sign in with GitHub
-    </a>
-  {% endif %}
+    <p class="endless_loading"></p>
+    </div>
 {% endblock %}
 
 {% block javascript %}
   {{ block.super }}
   <script src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
   <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+  <script src="http://code.jquery.com/jquery-latest.js"></script>
+  <script src="{% static "js/el_pagination.js" %}"></script>
   <script>
-    let $grid_albums = $('.repo-grid').masonry({
+    let grid_albums = document.querySelector('#repo_grid');
+    let msnry = new Masonry(grid_albums, {
       // options
       itemSelector: '.repo-grid-item',
       columnWidth: '.repo-grid-item',
       fitWidth:true,
       gutter:20,
+      transitionDuration: 0
     });
-    $grid_albums.imagesLoaded().progress( function() {
-      $grid_albums.masonry('layout');
+    imagesLoaded( grid_albums ).on( 'progress', function() {
+      // layout Masonry after each image loads
+      msnry.layout();
+    });
+    $.endlessPaginate({
+      paginateOnScroll: true, paginateOnScrollMargin: 400,
+      contentSelector: '.repo-grid',
+      onClick: function() {
+        let moreCard = document.querySelector('#moreCard');
+        moreCard.setAttribute("hidden", "true");
+      },
+      onCompleted: function(context, fragment) {
+          msnry.reloadItems();
+          msnry.layout();
+          imagesLoaded( grid_albums ).on( 'progress', function() {
+            msnry.layout();
+          });
+      }
     });
   </script>
 {% endblock %}

@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load socialaccount static image_proxy %}
+
+{% block css %}
+  {{ block.super }}
+  <link rel="stylesheet" href="{% static 'css/starboard.css' %}"/>
+{% endblock %}
+
+{% block content %}
+
+<div class="login-div">
+  <div class="pt-5 pb-4">
+    <blockquote class="offset-1 col-10">
+      <p class="mb-0">We are all on the GitHub, but some of us are looking at the stars.</p>
+      <footer class="blockquote-footer">Oscar Wilde, <cite title="Oscar Wilde, kinda">Lady Windamere's Fan</cite></footer>
+    </blockquote>
+  </div>
+
+  <a id="github-button" class="btn btn-dark btn-lg btn-social btn-github" href="{% provider_login_url "github" %}">
+    <i class="fab fa-github"></i> Sign in with GitHub
+  </a>
+</div>
+
+{% endblock %}

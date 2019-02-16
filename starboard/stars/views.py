@@ -1,23 +1,47 @@
-import itertools
+from django.contrib.auth.mixins import LoginRequiredMixin
+from el_pagination.views import AjaxListView
 
-from allauth.socialaccount.models import SocialToken
-from django.views.generic import TemplateView
-from github import Github
+from starboard.stars.forms import StarOutputForm
+from starboard.stars.models import Repo
 
 
-class StarboardView(TemplateView):
+class StarView(AjaxListView):
 
+    model = Repo
     template_name = "pages/starboard.html"
+    page_template = "pages/starboard_page.html"
 
     def get_context_data(self, **kwargs):
-        context = super(StarboardView, self).get_context_data(**kwargs)
-        if self.request.user.is_authenticated:
-            social_token = SocialToken.objects.get(account__user=self.request.user)
-            github = Github(social_token.token)
-            user_profile = github.get_user()
-            starred = user_profile.get_starred()
-            context["starred"] = itertools.islice(starred, 30)
+        # leaving in form logic for use if desired, but isn't being rendered in the frontend atm
+        form = StarOutputForm(self.request.GET)
+        context = super(StarView, self).get_context_data(**kwargs)
+        context["form"] = form
         return context
 
 
-starboard_view = StarboardView.as_view()
+class UserStarView(LoginRequiredMixin, StarView):
+
+    def get_queryset(self):
+        form = StarOutputForm(self.request.GET)
+        qs = super(UserStarView, self).get_queryset().filter(star__user=self.request.user).order_by("-star__starred_at")
+        if form.is_valid():
+            if "language" in form.data:
+                qs = qs.filter(language__iexact=form.data["language"])
+        return qs
+
+
+user_starboard_view = UserStarView.as_view()
+
+
+class TopStarView(StarView):
+
+    def get_queryset(self):
+        form = StarOutputForm(self.request.GET)
+        qs = super(TopStarView, self).get_queryset()
+        if form.is_valid():
+            if "language" in form.data:
+                qs = qs.filter(language__iexact=form.data["language"])
+        return qs.order_by("-stargazers_count")
+
+
+top_starboard_view = TopStarView.as_view()
