@@ -5,13 +5,13 @@
   <div class="card repo-grid-item">
     {% if repo.image_url %}
       <div class="img-container">
-        <a href="{{ repo.url }}">
+        <a href="{{ repo.url }}" target="_blank" rel="noopener">
           <img hidden class="card-img-top" src="{{ repo.image_url|proxy }}" align="middle" onload="this.removeAttribute('hidden')" onerror="this.src=''"/>
         </a>
       </div>
     {% endif %}
     <div class="card-body">
-      <h5 class="card-title"><a class="repo-link" href="{{ repo.url }}">{{ repo.name }}</a></h5>
+      <h5 class="card-title"><a class="repo-link" href="{{ repo.url }}" target="_blank" rel="noopener">{{ repo.name }}</a></h5>
       {% if repo.description %}
         <h6 class="text-muted">{{ repo.description }}</h6>
       {% endif %}

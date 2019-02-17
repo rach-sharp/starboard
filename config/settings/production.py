@@ -1,7 +1,16 @@
+import sentry_sdk
+from sentry_sdk.integrations.celery import CeleryIntegration
+from sentry_sdk.integrations.django import DjangoIntegration
 from storages.backends.sftpstorage import SFTPStorage
 
 from .base import *  # noqa
 from .base import env
+
+sentry_sdk.init(
+    dsn=env("SENTRY_DSN"),
+    integrations=[DjangoIntegration(), CeleryIntegration()],
+    send_default_pii=True
+)
 
 # GENERAL
 # ------------------------------------------------------------------------------
