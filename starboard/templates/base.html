@@ -17,7 +17,7 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://starboard.rachsharp.co.uk">
     <meta property="og:title" content="Starboard">
-    <meta property="og:image" content="{%  static 'images/top_stars_example.jpg' %}">
+    <meta property="og:image" content="https://starboard.rachsharp.co.uk{%  static 'images/top_stars_example.jpg' %}">
     <meta property="og:description" content="Make your GitHub Stars shine!">
     <meta property="og:site_name" content="Starboard">
     <meta property="og:locale" content="en_US">
@@ -41,13 +41,12 @@
     <!-- This file stores project-specific CSS -->
     
     <link href="{% static 'css/project.css' %}" rel="stylesheet">
-    
-    
+
     {% endblock %}
 
   </head>
 
-  <body style="background-image: url('{% static 'images/514.jpg' %}'); background-attachment: fixed">
+  <body style="background-image: url('{% static 'images/stars-light-blur.jpg' %}')">
     <div class="wrapper">
       <div class="parallax mb-1">
         <nav class="navbar navbar-expand-md fixed-top mb-5 navbar-dark bg-dark">
