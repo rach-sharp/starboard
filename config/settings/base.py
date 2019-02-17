@@ -233,8 +233,6 @@ ADMINS = [
 # https://docs.djangoproject.com/en/dev/ref/settings/#managers
 MANAGERS = ADMINS
 
-CAMO_URL = env("CAMO_URL")
-CAMO_KEY = env("CAMO_KEY").encode("utf-8")
 
 # django-allauth
 # ------------------------------------------------------------------------------
@@ -296,3 +294,6 @@ IMG_SRC_IGNORE_STRINGS = [
     "avatar.svg", "ga-beacon.appspot.com", "floobits.com", "gitpod.io", "api.bintray.com",
     "jitpack.io", "browser-logos"
 ]
+
+CAMO_URL = env("CAMO_URL")
+CAMO_KEY = env("CAMO_KEY").encode("utf-8")
