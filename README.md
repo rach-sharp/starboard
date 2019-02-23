@@ -8,6 +8,8 @@ Take your GitHub Stars and make them shine. Presents the top GitHub stars as a
 
 [You can access the live site without any setup.](https://starboard.rachsharp.co.uk)
 
+<br/>
+
 ## Getting Started
 
 These instructions will get you a copy of the project up and running on your local machine
