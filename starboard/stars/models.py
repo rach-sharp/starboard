@@ -62,7 +62,7 @@ class Repo(models.Model):
         readme_response = requests.get(possible_readme_url)
         if readme_response.status_code == 200:
             html_markdown = markdown.markdown(readme_response.text)
-            soup = BeautifulSoup(html_markdown)
+            soup = BeautifulSoup(html_markdown, "html.parser")
             for img in soup.find_all('img'):
                 if not ignore_sources(img):
                     img_src = img.attrs["src"]

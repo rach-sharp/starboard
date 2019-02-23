@@ -9,5 +9,5 @@ def ignore_sources(image, ignore_urls=None):
         ignore_image_canonical = any(url in image.attrs["data-canonical-src"] for url in ignore_urls)
     else:
         ignore_image_canonical = False
-    ignore_image = any(url in image.attrs["src"] for url in ignore_urls)
+    ignore_image = "src" not in image.attrs or any(url in image.attrs["src"] for url in ignore_urls)
     return ignore_image or ignore_image_canonical
