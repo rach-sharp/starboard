@@ -3,6 +3,7 @@ Base settings to build other settings files upon.
 """
 
 import environ
+from celery.schedules import crontab
 
 ROOT_DIR = environ.Path(__file__) - 3  # (starboard/config/settings/base.py - 3 = starboard/)
 APPS_DIR = ROOT_DIR.path('starboard')
@@ -280,6 +281,13 @@ CELERYD_TASK_TIME_LIMIT = 5 * 60
 # http://docs.celeryproject.org/en/latest/userguide/configuration.html#task-soft-time-limit
 # TODO: set to whatever value is adequate in your circumstances
 CELERYD_TASK_SOFT_TIME_LIMIT = 60
+
+CELERY_BEAT_SCHEDULE = {
+    'update-repo-images': {
+       'task': 'starboard.stars.tasks.update_images_for_repos',
+       'schedule': crontab(hour=19, minute=0),
+    },
+}
 
 # Your stuff...
 # ------------------------------------------------------------------------------

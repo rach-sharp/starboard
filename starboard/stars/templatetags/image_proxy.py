@@ -7,4 +7,5 @@ register = template.Library()
 
 @register.filter
 def proxy(url):
+    """Pass an image url through camo"""
     return create_signed_url(settings.CAMO_URL, hmac_key=settings.CAMO_KEY, url=url)

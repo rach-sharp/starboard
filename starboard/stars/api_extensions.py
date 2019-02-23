@@ -18,7 +18,8 @@ def get_starred_with_dates(named_user):
 
 class Starred(GithubObject.NonCompletableGithubObject):
     """
-    This class represents Repos being starred. The reference can be found here https://developer.github.com/v3/activity/starring/#alternative-response-with-star-creation-timestamps
+    This class represents Repos being starred. The reference can be found here:
+    https://developer.github.com/v3/activity/starring/#alternative-response-with-star-creation-timestamps
     """
 
     def __repr__(self):
