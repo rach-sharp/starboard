@@ -14,10 +14,10 @@ from starboard.stars.utilities import ignore_sources
 
 class Repo(models.Model):
     id = models.IntegerField(primary_key=True)
-    name = models.CharField(max_length=255)
-    full_name = models.CharField(max_length=255)
-    description = models.CharField(max_length=1000, null=True)
-    url = models.CharField(max_length=255)
+    name = models.CharField(max_length=1000)
+    full_name = models.CharField(max_length=1000)
+    description = models.CharField(max_length=10000, null=True)
+    url = models.CharField(max_length=1000)
     homepage = models.CharField(max_length=1000, null=True)
     default_branch = models.CharField(max_length=500)
 
