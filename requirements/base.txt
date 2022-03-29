@@ -26,5 +26,5 @@ camo-sign==0.1.1
 celery==4.2.1
 flower==0.9.2
 requests==2.21.0
-paramiko==2.4.2
+paramiko==2.10.1
 sentry-sdk==0.7.2
